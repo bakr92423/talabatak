@@ -90,33 +90,42 @@ const getStores = async (req, res) => {
 }
 
 
-const updateStore=async(req,res)=>{
+const updateStore = async (req, res) => {
+  try {
+    const id = req.params.id
+    const store = await STORE.findById(id)
 
- try{
-    
-       const id=req.params.id
-    const store= await STORE.findById(id)
-
-    if(!store){
-        return res.json({msg:" المتجر غير موجود"})
+    if (!store) {
+      return res.status(404).json({ msg: "المتجر غير موجود" })
     }
-    const data={
-        ...store.toObject(),
-        ...req.body
+
+    const data = {
+      ...req.body
     }
-    if(req.body.name){
-        data.slug=slug(name,{lower:true,strict:true,locale:"ar"})
+
+    // اتصلح - كان slug(name) و name مش موجود
+    if (req.body.name) {
+      data.slug = slug(req.body.name, { lower: true, strict: true, locale: "ar" })
     }
-    const updatedStore= await STORE.findOneAndUpdate({_id:id},data,{new:true})
 
-     res.json({msg:"تم تحديث  المتجر",data:updatedStore})
+    // مهم: متبعتش _id و __v في التحديث عشان مونجو ميضربش
+    delete data._id
+    delete data.__v
 
- }catch(error){
-    res.json({msg:"خطأ في تحديث  المتجر"})
+    const updatedStore = await STORE.findOneAndUpdate(
+      { _id: id },
+      data,
+      { new: true, runValidators: true }
+    )
 
- }
+    res.json({ msg: "تم تحديث المتجر", data: updatedStore })
 
+  } catch (error) {
+    console.log("UPDATE STORE ERROR:", error) // عشان تشوف الخطأ الحقيقي بعد كده
+    res.status(500).json({ msg: "خطأ في تحديث المتجر", error: error.message })
+  }
 }
+
 const deleteStore=async(req,res)=>{
 
  try{
