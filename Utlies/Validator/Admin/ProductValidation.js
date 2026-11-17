@@ -28,5 +28,5 @@ exports.ProductValidation = [
 
   validatorMidellwear
 ]
-]
+
     
