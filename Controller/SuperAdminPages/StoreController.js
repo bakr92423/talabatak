@@ -71,9 +71,18 @@ const getStores = async (req, res) => {
       filter.name = { $regex: query.keyword, $options: 'i' }
     }
 
-    if (query.typeStore) {
-      filter.typeStore = query.typeStore
-    }
+    // if (query.typeStore || query.type) {
+    //   filter.typeStore = query.typeStore
+    //    const stores = await STORE.find(filter).limit(limit).skip(skip)
+    // }
+
+    const typeValue = query.type || query.typeStore
+if (typeValue) {
+  // دور في جدول الانواع بالـ slug
+  const typeDoc = await TypeStoreSchema.findOne({ slug: typeValue })
+  // لو لقيته خد الاسم العربي، لو ملقيتوش استخدم اللي جاي زي ما هو
+  filter.typeStore = typeDoc ? typeDoc.name : typeValue
+}
 
     const stores = await STORE.find(filter).limit(limit).skip(skip)
 
