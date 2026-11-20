@@ -41,7 +41,8 @@ const addOrder=async(req,res)=>{
                 price: unitPrice,
                 size: size,
                 variant: size,
-                name: item.name || finalName
+                name: item.name || finalName,
+                note: item.note || item.note || ""
             })
         }
 

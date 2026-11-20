@@ -30,6 +30,10 @@ const OrdersSchema=mongoose.Schema({
             type:String,
             default: null
         },
+        note:{
+            type:String,
+            default:""
+        },
         // اسم المنتج وقت الطلب - عشان لو المنتج اتمسح يفضل الاسم موجود
         name:{
             type:String,

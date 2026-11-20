@@ -5,7 +5,7 @@ const slug = require("slugify")
 
 const addProduct = async (req, res) => {
     try {
-        const { name, description, image, isActive, price, priceAfterDiscount, quantity, sold, store, category, variants } = req.body
+        const { name, description, image, isActive, price, priceAfterDiscount, quantity, sold, store, category, variants,note } = req.body
 
         const generateSlug = slug(name, { lower: true, strict: true, locale: "ar" })
 
@@ -28,6 +28,7 @@ const addProduct = async (req, res) => {
             name,
             slug: generateSlug,
             description,
+            note,
             isActive,
             image,
             price: finalPrice,
@@ -107,7 +108,7 @@ const getProducts = async (req, res) => {
 
 const updateProduct = async (req, res) => {
     try {
-        const { name, description, isActive, image, price, priceAfterDiscount, quantity, sold, store, category, variants } = req.body
+        const { name, description, isActive, image, price, priceAfterDiscount, quantity, sold, store,note, category, variants } = req.body
         const generateSlug = slug(name, { lower: true, strict: true, locale: "ar" })
         const id = req.params.id
         const product = await PRODUCT.findById(id)
@@ -143,12 +144,12 @@ const deleteProduct = async (req, res) => {
         const id = req.params.id
         const product = await PRODUCT.findById(id)
         if (!product) {
-            return res.json({ msg: " المتجر غير موجود" })
+            return res.json({ msg: " الصنف غير موجود" })
         }
         await PRODUCT.findByIdAndDelete(id)
-        res.json({ msg: "تم حذف  المتجر" })
+        res.json({ msg: "تم حذف  الصنف" })
     } catch (error) {
-        res.json({ msg: "خطأ في حذف  المتجر" })
+        res.json({ msg: "خطأ في حذف  الصنف" })
     }
 }
 
