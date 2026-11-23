@@ -3,9 +3,9 @@ const USER=require("../../Schema/SuperAdminPages/UserSchema")
 // عدل المسار ده على حسب مكان ملف المنتج عندك
 const PRODUCT=require("../../Schema/AdminPages/ProductSchema")
 
-const addOrder=async(req,res)=>{
-    try{
-        console.log(req.body,"oooo");
+const addOrder = async (req, res) => {
+    try {
+        console.log(req.body, "oooo");
         
         const { orderItems, deliveryFee } = req.body
 
@@ -50,16 +50,24 @@ const addOrder=async(req,res)=>{
             return res.json({ msg: "السلة فاضية" })
         }
 
+        // لو مفيش يوزر، امسحه خالص عشان المونجو ميرفضش الاوردر
+        const bodyData = { ...req.body };
+        if (!bodyData.user) {
+            delete bodyData.user;
+        }
+        // احفظ الاسم اللي جاي من الواجهة
+        bodyData.customerName = bodyData.customerName || bodyData.name || "ضيف";
+
         const newOrder = ORDER({
-            ...req.body,
+            ...bodyData,
             orderItems: fixedItems,
             totalOrder: subtotal + Number(deliveryFee || 0)
         })
         await newOrder.save()
 
-        res.json({msg:"تم اضافة طلبك",data:newOrder})
+        res.json({ msg: "تم اضافة طلبك", data: newOrder })
 
-    }catch(error){
+    } catch (error) {
         console.log(error)
         res.json("خطأ اثناء الاضافة")
     }

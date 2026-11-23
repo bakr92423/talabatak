@@ -49,6 +49,14 @@ const OrdersSchema=mongoose.Schema({
     phone:{
         type:String
     },
+    customerName:{
+        type:String,
+        default: ""
+    },
+    name:{
+        type:String,
+        default: ""
+    },
     location:{
       type:mongoose.Schema.ObjectId,
         ref:"location"
